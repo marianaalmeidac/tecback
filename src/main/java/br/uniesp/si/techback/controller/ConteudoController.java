@@ -6,6 +6,7 @@ import br.uniesp.si.techback.exception.EntidadeNaoEncontradaException;
 import br.uniesp.si.techback.model.Conteudo;
 import br.uniesp.si.techback.model.Tipo;
 import br.uniesp.si.techback.service.ConteudoService;
+import jakarta.validation.ConstraintTarget;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -78,5 +80,41 @@ public class ConteudoController {
         } catch (EntidadeNaoEncontradaException erro) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/ordenado/titulo")
+    public ResponseEntity<List<Conteudo>> listarOrdenadoPorTitulo() {
+        List<Conteudo> conteudos = conteudoService.listarOrdenadoPorTitulo();
+        return ResponseEntity.ok(conteudos);
+    }
+
+    @GetMapping("/genero")
+    public ResponseEntity<List<Conteudo>> buscarPorGenero( @RequestParam String genero) {
+        List<Conteudo> lista = conteudoService.buscarPorGeneroOrdenado(genero);
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Conteudo>> topConteudos(@RequestParam int n) {
+        List<Conteudo> conteudos = conteudoService.buscarTopNConteudos(n);
+        return ResponseEntity.ok(conteudos);
+    }
+
+    @GetMapping("/apos-ano")
+    public ResponseEntity<List<Conteudo>> conteudosAposAno(@RequestParam int ano) {
+        List<Conteudo> conteudos = conteudoService.buscarConteudosLancadosDepoisDe(ano);
+        return ResponseEntity.ok(conteudos);
+    }
+
+    @GetMapping("/com-trailer")
+    public ResponseEntity<List<Conteudo>> conteudosComTrailer() {
+        List<Conteudo> conteudo = conteudoService.buscarConteudosComTrailer();
+        return ResponseEntity.ok(conteudo);
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Conteudo>> buscarConteudos(@RequestParam String palavra) {
+        List<Conteudo> conteudo = conteudoService.buscarPorPalavraChave(palavra);
+        return ResponseEntity.ok(conteudo);
     }
 }

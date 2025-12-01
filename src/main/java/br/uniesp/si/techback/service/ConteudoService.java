@@ -9,9 +9,12 @@ import br.uniesp.si.techback.repository.ConteudoRepository;
 import br.uniesp.si.techback.repository.ConteudoSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import java.util.List;
+
 
 import java.util.UUID;
 
@@ -79,4 +82,30 @@ public class ConteudoService {
         }
         conteudoRepository.deleteById(id);
     }
+
+    public List<Conteudo> listarOrdenadoPorTitulo() {
+        return conteudoRepository.listarOrdenadoPorTitulo();
+    }
+
+    public List<Conteudo> buscarPorGeneroOrdenado(String genero) {
+        return conteudoRepository.findByGeneroIgnoreCaseOrderByTituloAsc(genero);
+    }
+
+    public List<Conteudo> buscarTopNConteudos(int n) {
+        Pageable pageable = PageRequest.of(0, n);
+        return conteudoRepository.findTopNByRelevancia(pageable);
+    }
+
+    public List<Conteudo> buscarConteudosLancadosDepoisDe(int ano) {
+        return conteudoRepository.findConteudosLancadosDepoisDe(ano);
+    }
+
+    public List<Conteudo> buscarConteudosComTrailer() {
+        return conteudoRepository.findConteudoComTrailer();
+    }
+
+    public List<Conteudo> buscarPorPalavraChave(String palavra) {
+        return conteudoRepository.buscarPorPalavraChave(palavra);
+    }
+
 }
